@@ -1,6 +1,7 @@
 import hashlib
 import time
-from blockchain.merkle_tree import MerkleTree
+from src.blockchain.merkle_tree import MerkleTree
+
 class Block:
   def __init__(self, index, transactions, previous_hash):
     self.index = index

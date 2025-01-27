@@ -6,7 +6,7 @@ class MerkleTree :
     self.merkle_root = self.build_merkle_tree(transactions)
 
   def hash_transactions(self, transaction):
-    return hashlib.sha_256(transaction.encode()).hexdigest()
+    return hashlib.sha256(transaction.encode()).hexdigest()
   
   def build_merkle_tree(self, transactions):
     # Recursively build Merkle Tree and return the root hash

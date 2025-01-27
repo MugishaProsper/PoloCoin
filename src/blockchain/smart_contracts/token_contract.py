@@ -1,4 +1,4 @@
-from blockchain.smart_contracts.base_contract import BaseContract
+from src.blockchain.smart_contracts.base_contract import BaseContract
 
 class TokenContract(BaseContract):
   def __init__(self, creator_address, token_name, token_symbol, initial_supply):
@@ -18,3 +18,16 @@ class TokenContract(BaseContract):
     self.state["balances"][recipient] += amount
 
     self.emit_event("Transfer", {"from" : sender, "to" : recipient, "amount" : amount })
+
+  def mint(self, recipient, amount):
+    """Mint new tokens  and add them to a recipient's balance"""
+    if self.creator_address !=  recipient:
+      raise Exception("Only the creator can mint tokens")
+
+    self.state["total_supply"] += amount
+    self.state["balances"][recipient] += amount
+    self.emit_event("Mint", {"to" : recipient, "amount" : amount })
+
+  def balance_of(self, address):
+    """Get the balance of an address"""
+    return self.state["balances"].get(address, 0)

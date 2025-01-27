@@ -6,7 +6,7 @@ class Transaction:
     self.signature = signature
 
   def to_dict(self):
-    """Convert the transaction to a dictinary"""
+    """Convert the transaction to a dictionary"""
     return {
       "sender" : self.sender,
       "receiver" : self.receiver,

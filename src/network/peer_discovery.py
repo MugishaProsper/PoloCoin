@@ -1,5 +1,5 @@
 class BootstrapNode:
-  """A bootstrap node that controlls a list of peer nodes"""
+  """A bootstrap node that controls a list of peer nodes"""
 
   def __init__(self):
     self.peers = set()

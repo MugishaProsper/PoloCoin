@@ -1,6 +1,6 @@
 import random
-from blockchain.staking import StakingSystem
-from blockchain.block import Block
+from src.blockchain.staking import StakingSystem
+from src.blockchain.block import Block
 
 class Blockchain :
   def __init__(self):
@@ -81,6 +81,10 @@ class Blockchain :
 
 
   def is_chain_valid(self, chain):
+    if not chain:
+      print("The blockchain is empty")
+      return False
+
     """Validate the entire blockchain"""
     for i in range(1, len(chain)):
       current_block = chain[i]
@@ -111,7 +115,7 @@ class Blockchain :
       if self.staking_pool[address] <= 0:
         del self.staking_pool[address]
       return True
-    print(f"Insuffient stake of {address}")
+    print(f"Insufficient stake of {address}")
     return False
   
   def process_transaction(self, transaction):
@@ -121,7 +125,7 @@ class Blockchain :
     amount = transaction.amount
 
     if sender != "Network" and self.balances.get(sender, 0) < amount:
-      print(f"Transaction failde : Insuffient balance for {sender}")
+      print(f"Transaction failed : Insufficient balance for {sender}")
       return False
     
     if not transaction.is_valid(sender):
@@ -151,3 +155,6 @@ class Blockchain :
     # Distribute rewards
     self.staking_system.distribute_rewards(validator, reward)
     print(f"Block created by validator {validator}. Reward : {reward:.2f}")
+
+  def __len__(self):
+    return len(self.chain)

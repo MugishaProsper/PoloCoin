@@ -1,15 +1,21 @@
 import socket
 import threading
 import json
+
+from cryptography.hazmat.primitives import serialization
 from utils.crypto_utils import generate_keys, serialize_key
-from network.dht import DHT
+from src.network.dht import DHT
+
+from src.network.messages import create_block_message, create_transaction_message
+from src.utils.crypto_utils import encrypt_message, sign_message, decrypt_message, verify_signature
+
 
 class Node:
   def __init__(self, host, port):
     self.host = host
     self.port = port
     self.peers = [] # Connected nodes
-    self.blockachain = None
+    self.blockchain = None
     self.private_key, self.public_key = generate_keys()
     print(f"Node public key : {serialize_key(self.public_key).decode()}")
     self.dht.set_node_id(self.public_key.public_bytes(encoding=serialization.Encoding.PEM, format=serialization.PublicFormat.SubjectPublicKeyInfo).decode())
@@ -80,17 +86,17 @@ class Node:
 
   def add_block_to_chain(self, block_data):
     """Add a block to the local blockchain"""
-    from blockchain.blockchain import Block
+    from src.blockchain.block import Block
     new_block = Block.from_dict(block_data)
-    if self.blockachain.add_block(new_block.transactions):
+    if self.blockchain.add_block(new_block.transactions):
       print(f"Block {new_block.index} added to the blockchain")
       self.broadcast(create_block_message(new_block))
 
   def add_transaction_to_pool(self, transaction_data):
     """Add a transaction to the blockchain's transaction pool"""
-    from blockchain.transaction import Transaction
+    from src.blockchain.transaction import Transaction
     new_transaction = Transaction(**transaction_data)
-    if self.blockachain.process_transaction(new_transaction):
+    if self.blockchain.process_transaction(new_transaction):
       print(f"Transaction added to the pool : {new_transaction.to_dict()}")
       self.broadcast(create_transaction_message(new_transaction))
 
@@ -104,10 +110,10 @@ class Node:
 
   def handle_chain_request(self, chain_data):
     """Replace the local blockchain if the received chain is longer and valid"""
-    from blockchain.blockchain import Block
+    from src.blockchain.block import Block
     new_chain = [Block.from_dict(block) for block in chain_data]
-    if len(new_chain) > len(self.blockachain.chain) and self.blockachain.is_chain_valid(new_chain):
-      self.blockachain.chain = new_chain
+    if len(new_chain) > len(self.blockchain.chain) and self.blockchain.is_chain_valid(new_chain):
+      self.blockchain.chain = new_chain
       print("Local blockchain updated to the received chain")
     else :
       print("Received chain not longer than the local one")
@@ -123,7 +129,7 @@ class Node:
   
   def send_secure_message(self, peer_socket, message, recipient_public_key):
     """Encrypt and sign a message before sending it to a peer"""
-    encrypted_message = encrypted_message(message, recipient_public_key)
+    encrypted_message = encrypt_message(message, recipient_public_key)
     signature = sign_message(message, self.private_key)
     payload = {
       "encrypted_message" : encrypted_message.hex(),
@@ -133,10 +139,10 @@ class Node:
 
   def handle_secure_message(self, payload, sender_public_key):
     """Decrypt and verify a message from a peer"""
-    encryped_message = bytes.fromhex(payload["encrypted_message"])
+    encrypted_message = bytes.fromhex(payload["encrypted_message"])
     signature = bytes.fromhex(payload["signature"])
 
-    message = decrypt_message(encryped_message, self.private_key)
+    message = decrypt_message(encrypted_message, self.private_key)
 
     if verify_signature(message, signature, sender_public_key):
       print("Verified message : ", message)
@@ -159,7 +165,7 @@ class Node:
       print(f"Failed to connect to bootstrap node : {e}")
 
   def broadcast_peers(self):
-    """Send the updated peer list to all conneced peers"""
+    """Send the updated peer list to all connected peers"""
     message = {
       "type" : "PEER_UPDATE",
       "data" : self.peers

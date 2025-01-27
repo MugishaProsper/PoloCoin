@@ -3,7 +3,7 @@ import random
 class StakingSystem:
   def __init__(self):
     self.stakes = {}
-    self.delefations = {}
+    self.delegations = {}
     self.validator_candidates = {}
 
   def stake_tokens(self, node_id, amount):
