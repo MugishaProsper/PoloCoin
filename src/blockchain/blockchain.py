@@ -1,4 +1,6 @@
 import random
+from time import sleep
+
 from src.blockchain.staking import StakingSystem
 from src.blockchain.block import Block
 
@@ -22,7 +24,7 @@ class Blockchain :
         print(f"Validator {validator} is removed from staking pool")
         del self.staking_pool[validator]
 
-  def validate_block(self, block):
+  def validate_block(self):
     """Simulate block validation by other nodes"""
     return random.choice([True, True, False])
 
@@ -33,10 +35,9 @@ class Blockchain :
   
   def add_stake(self, address, amount):
     """Allow users to stake their coins"""
-    if address in self.staking_pool:
-      self.staking_pool[address] += amount
-    else:
-      self.staking_pool[address] -= amount
+    if address not in self.staking_pool:
+      self.staking_pool[address] = 0
+    self.staking_pool[address] += amount
     return True
   
   def select_validator(self):
@@ -120,21 +121,20 @@ class Blockchain :
   
   def process_transaction(self, transaction):
     """Validate and process a transaction"""
-    sender = transaction.sender
-    receiver = transaction.receiver
-    amount = transaction.amount
-
-    if sender != "Network" and self.balances.get(sender, 0) < amount:
-      print(f"Transaction failed : Insufficient balance for {sender}")
-      return False
-    
-    if not transaction.is_valid(sender):
-      print("Transaction failed : Invalid signature")
-      return False
-    
-    self.balances[sender] = self.balances.get(sender, 0) - amount
-    self.balances[receiver] = self.balances.get(receiver, 0) + amount
-    return True
+    if transaction.transaction_type == "TRANSFER":
+      if self.get_balance(transaction.sender) >= transaction.amount:
+        self.update_balance(transaction.sender, -transaction.amount)
+        self.update_balance(transaction.recipient, transaction.amount)
+        return True
+    elif transaction.transaction_type == "STAKE":
+      if self.get_balance(transaction.sender) >= transaction.amount:
+        self.update_balance(transaction.sender, -transaction.amount)
+        return True
+    elif transaction.transaction_type == "UNSTAKE":
+      if self.staking_pool.get_stake(transaction.sender) >= transaction.amount:
+        self.update_balance(transaction.sender, transaction.amount)
+        return True
+    return False
   
   def create_block(self):
     """Create a new block with a validator selected by DPoS"""
@@ -155,6 +155,27 @@ class Blockchain :
     # Distribute rewards
     self.staking_system.distribute_rewards(validator, reward)
     print(f"Block created by validator {validator}. Reward : {reward:.2f}")
+
+  def process_staking(self, transaction):
+    """Handle staking transactions"""
+    sender_wallet = self.get_wallet(transaction.sender)
+    if sender_wallet and sender_wallet.balance >= transaction.amount:
+      sender_wallet.balance -= transaction.amount
+      self.staking_pool.add_stake(transaction.sender, transaction.amount)
+      print(f"Staked {transaction.amount} for {transaction.sender}")
+      return True
+    return False
+
+  def process_unstaking(self, transaction):
+    """Handle unstaking transactions"""
+    stake = self.staking_pool.get_stake(transaction.sender)
+    if stake and stake >= transaction.amount:
+      self.staking_pool.remove_stake(transaction.sender, transaction.amount)
+      sender_wallet = self.get_wallet(transaction.sender)
+      sender_wallet.balance += transaction.amount
+      print(f"Unstaked {transaction.amount} for {transaction.sender}")
+      return True
+    return False
 
   def __len__(self):
     return len(self.chain)

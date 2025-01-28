@@ -4,21 +4,26 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8d3521aa-af9f-4a8a-9738-6e0d056518f4" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/blockchain/smart_contracts/escrow_contract.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_enhanced_pos.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="8d3521aa-af9f-4a8a-9738-6e0d056518f4" name="Changes" comment="updated transactions pipelines">
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/utils/Database.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/simulation_tests.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/test_node.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/blockchain/block.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/blockchain/block.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/blockchain/blockchain.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/blockchain/blockchain.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/blockchain/merkle_tree.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/blockchain/merkle_tree.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blockchain/smart_contracts/token_contract.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/blockchain/smart_contracts/token_contract.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blockchain/smart_contracts/voting_contract.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/blockchain/smart_contracts/voting_contract.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blockchain/staking.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/blockchain/staking.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/blockchain/transaction.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/blockchain/transaction.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blockchain/wallet.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/blockchain/wallet.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/network/dht.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/network/dht.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/network/node.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/network/node.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/network/peer_discovery.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/network/peer_discovery.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_blockchain.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_blockchain.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_blockchain.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_consensus.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/staking/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_enhanced_pos.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_transaction.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/staking/staking_pool.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,6 +40,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "MugishaProsper"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/MugishaProsper/PoloCoin.git",
+    "accountId": "e1b16373-f8c5-49a7-824d-107770d4dbd8"
+  }
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
 }</component>
@@ -52,6 +69,7 @@
     "Python tests.Python tests in test_enhanced_pos.py.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "main",
     "last_opened_file_path": "C:/Users/pc/Documents/polocoin",
     "node.js.detected.package.eslint": "true",
@@ -60,6 +78,11 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
+    ]
   }
 }]]></component>
   <component name="SharedIndexes">
@@ -81,12 +104,36 @@
       <workItem from="1737848315803" duration="1818000" />
       <workItem from="1737897816127" duration="988000" />
       <workItem from="1737915694881" duration="6303000" />
-      <workItem from="1737956365046" duration="2860000" />
+      <workItem from="1737956365046" duration="27976000" />
     </task>
+    <task id="LOCAL-00001" summary="updated transactions pipelines">
+      <option name="closed" value="true" />
+      <created>1737962690312</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1737962690312</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="updated transactions pipelines" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated transactions pipelines" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/polocoin$.coverage" NAME=" Coverage Results" MODIFIED="1737956899218" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
