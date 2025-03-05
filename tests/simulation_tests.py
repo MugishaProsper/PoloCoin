@@ -1,9 +1,9 @@
+import time
 from src.utils.Database import Database as db
 from src.network.node import Node
-from src.staking.staking_pool import StakingPool
 from src.blockchain.blockchain import Blockchain
 from src.blockchain.transaction import Transaction
-import time
+from src.staking.staking_pool import StakingPool
 
 # Initialize the database connection
 db.initialize(
@@ -18,81 +18,81 @@ db.initialize(
 blockchain = Blockchain()
 staking_pool = StakingPool()
 
-def menu():
-    """Display the menu options."""
-    print("\n==== PoloCoin App ====")
-    print("1. Register a Node")
-    print("2. Stake Coins")
-    print("3. Unstake Coins")
-    print("4. Create Transaction")
-    print("5. View Blockchain")
-    print("6. Exit")
+# Create nodes
+node1 = Node(host="127.0.0.1", port=5000)
+node2 = Node(host="127.0.0.1", port=5001)
+node3 = Node(host="127.0.0.1", port=5002)
 
-def register_node():
-    """Register a new node."""
-    public_key = input("Enter node public key: ")
-    Node.register_node(public_key)
-    print(f"Node with public key {public_key} registered.")
+# Start nodes
+node1.start()
+node2.start()
+node3.start()
+
+# Wait for nodes to initialize
+time.sleep(2)
+
+# Connect nodes to each other
+node2.connect_to_peer("127.0.0.1", 5000)
+node3.connect_to_peer("127.0.0.1", 5000)
+
+
+def register_nodes():
+    """Register nodes in the network."""
+    print("Registering nodes...")
+    node1.save_to_db()
+    node2.save_to_db()
+    node3.save_to_db()
+    print("Nodes registered.")
+
 
 def stake_coins():
-    """Stake coins for a node."""
-    public_key = input("Enter node public key: ")
-    amount = float(input("Enter amount to stake: "))
-    staking_pool.add_stake(public_key, amount)
-    print(f"{amount} coins staked for node {public_key}.")
+    """Stake coins for nodes."""
+    print("Staking coins...")
+    node1.stake(sender=node1.public_key, amount=100)
+    node2.stake(sender=node2.public_key, amount=150)
+    node3.stake(sender=node3.public_key, amount=200)
+    print("Coins staked.")
 
-def unstake_coins():
-    """Unstake coins from a node."""
-    public_key = input("Enter node public key: ")
-    amount = float(input("Enter amount to unstake: "))
-    staking_pool.remove_stake(public_key, amount)
-    print(f"{amount} coins unstaked for node {public_key}.")
 
-def create_transaction():
-    """Create a new transaction."""
-    sender = input("Enter sender public key: ")
-    receiver = input("Enter receiver public key: ")
-    amount = float(input("Enter transaction amount: "))
-    transaction = Transaction(sender, receiver, amount)
+def create_transactions():
+    """Create transactions between nodes."""
+    print("Creating transactions...")
+    transaction1 = Transaction(sender=node1.public_key, receiver=node2.public_key, amount=10)
+    transaction2 = Transaction(sender=node2.public_key, receiver=node3.public_key, amount=20)
 
-    # Simulate validator selection
-    validator = staking_pool.select_validator()
-    if validator:
-        print(f"Validator selected: {validator}")
-        blockchain.add_transaction(transaction)
-        blockchain.mine_pending_transactions(validator)
-        print("Transaction added to the blockchain and mined.")
-    else:
-        print("No validators available. Cannot process the transaction.")
+    blockchain.add_transaction(transaction1)
+    blockchain.add_transaction(transaction2)
+
+    blockchain.mine_pending_transactions(node1.public_key)
+    print("Transactions created and mined.")
+
 
 def view_blockchain():
-    """Display the blockchain."""
-    print("\n==== Blockchain ====")
+    """View the current state of the blockchain."""
+    print("Viewing blockchain...")
     for block in blockchain.chain:
         print(block.to_dict())
-    print("====================")
+    print("Blockchain viewed.")
+
+
+def unstake_coins():
+    """Unstake coins from nodes."""
+    print("Unstaking coins...")
+    node1.unstake(sender=node1.public_key, amount=50)
+    node2.unstake(sender=node2.public_key, amount=75)
+    node3.unstake(sender=node3.public_key, amount=100)
+    print("Coins unstaked.")
+
 
 def main():
-    """Main simulation loop."""
-    while True:
-        menu()
-        choice = input("Enter your choice: ")
-        if choice == "1":
-            register_node()
-        elif choice == "2":
-            stake_coins()
-        elif choice == "3":
-            unstake_coins()
-        elif choice == "4":
-            create_transaction()
-        elif choice == "5":
-            view_blockchain()
-        elif choice == "6":
-            print("Exiting PoloCoin App...")
-            db.close_all_connections()
-            break
-        else:
-            print("Invalid choice. Please try again.")
+    """Main function to run the test."""
+    register_nodes()
+    stake_coins()
+    create_transactions()
+    view_blockchain()
+    unstake_coins()
+    view_blockchain()
+
 
 if __name__ == "__main__":
     main()

@@ -299,7 +299,8 @@ class Node:
     conn = db.get_connection()
     cursor = conn.cursor()
     query = """INSERT INTO nodes (public_key, host, port) VALUES (%s, %s, %s) ON CONFLICT (public_key) DO NOTHING;"""
-    cursor.execute(query, (self.public_key, self.host, self.port))
+    public_key_pem = self.public_key.public_bytes(encoding=serialization.Encoding.PEM, format=serialization.PublicFormat.SubjectPublicKeyInfo).decode('utf-8')
+    cursor.execute(query, (public_key_pem, self.host, self.port))
     conn.commit()
     db.release_connection(conn)
 
